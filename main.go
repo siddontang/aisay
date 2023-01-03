@@ -59,10 +59,22 @@ func buildRequest(prompt string) gogpt.CompletionRequest {
 	return req
 }
 
+func getKey() string {
+	if *key != "" {
+		return *key
+	}
+
+	if v := os.Getenv("AISAY_KEY"); v != "" {
+		return v
+	}
+
+	panic("No OpenAI API key provided")
+}
+
 func main() {
 	flag.Parse()
 
-	c := gogpt.NewClient(*key)
+	c := gogpt.NewClient(getKey())
 	ctx := context.Background()
 
 	prompt := readFromPipe()
